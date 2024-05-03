@@ -9,7 +9,7 @@ export default function Layout(){
       <SafeAreaView style={styles.body}>
         <Header></Header>
         <View style={{backgroundColor: '#f0f0f0', width: '100%', height: '100%', borderTopRightRadius: 25, borderTopLeftRadius: 25}}>
-          <Home></Home>
+          <Slot />
         </View>
       </SafeAreaView>
     );
