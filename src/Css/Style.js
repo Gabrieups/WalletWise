@@ -16,11 +16,23 @@ export default StyleSheet.create({
         justifyContent: 'space-between'
     },
 
-    calendario:{
+    mes:{
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         paddingLeft: 20
+    },
+
+    calendario: {
+        backgroundColor: 'white',
+        alignItems: 'center',
+        width: '90%',
+        height: '20%',
+        padding: 5,
+        borderRadius: 10,
+        position: 'absolute',
+        left: '5%',
+        top: '14%'    
     },
 
     text: {
@@ -31,11 +43,5 @@ export default StyleSheet.create({
         backgroundColor: '#ffffff',
         width: '100%',
         height: '75%',
-    },
-    
-    btnMudarMes: {
-        color: 'white',
-        fontSize: 30,
-        paddingHorizontal: 10
     },
 });

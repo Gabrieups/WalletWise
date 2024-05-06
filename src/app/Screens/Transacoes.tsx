@@ -1,10 +1,10 @@
 import { View, Text, Button } from 'react-native';
-import styles from '../Css/Style';
+import styles from '../../Css/Style';
 
-export default function Index(){
+export default function Transacoes(){
     return(
         <View style={{alignItems: 'center'}}>
-            <Text>Formulário de Cadastro</Text>
+            <Text>Transacoes</Text>
         </View>
     )
 }
