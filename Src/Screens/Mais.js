@@ -1,10 +1,12 @@
-import { View, Text, Button } from 'react-native';
-import styles from '../../Css/Style';
+import { View, Text } from 'react-native';
+import Layout from './Layout';
 
 export default function Mais(){
     return(
-        <View style={{alignItems: 'center'}}>
-            <Text>Mais</Text>
-        </View>
+        <Layout>
+            <View style={{alignItems: 'center'}}>
+                <Text>Mais</Text>
+            </View>
+        </Layout>
     )
 }

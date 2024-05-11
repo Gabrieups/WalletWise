@@ -1,8 +1,8 @@
 /*---------------MÃO MEXA-------------*/
 
 import {View, Text, Image, TouchableOpacity, Modal} from "react-native";
-import styles from '../Css/Style';
-import { Feather } from "@expo/vector-icons"
+import styles from '../../Css/Style';
+import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
 
 export default function Header(){
@@ -29,7 +29,7 @@ export default function Header(){
         setMostrarAno(mostrarAno - 1);
     };
 
-    const CarregarData = () => {
+    const CarregarData = (mes) => {
         setDataCarregada(mes + ' ' + mostrarAno);
         mostrarCalendario()
     }
@@ -48,7 +48,7 @@ export default function Header(){
 
                 <TouchableOpacity><Feather name="chevron-right" size={30} color={'white'}/></TouchableOpacity>   
             </View>
-            <Image source={require("@/src/assets/images/logo.png")} style={{width: 70, height: 50}} />
+            <Image source={require("../Images/logo.png")} style={{width: 70, height: 50}} />
 
             <Modal
                 animationType="none"
