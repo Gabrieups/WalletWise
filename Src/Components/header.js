@@ -4,6 +4,7 @@ import {View, Text, Image, TouchableOpacity, Modal} from "react-native";
 import styles from '../../Css/Style';
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
+import DrawerContent from "../../Navigation/Content";
 
 export default function Header(){
 
@@ -33,12 +34,17 @@ export default function Header(){
         setDataCarregada(mes + ' ' + mostrarAno);
         mostrarCalendario()
     }
+
+    const [isDrawerOpen, setDrawerOpen] = useState(false);
     
     return(
         <View style={styles.header}>
-            <TouchableOpacity id="sidebar">
+            
+            <TouchableOpacity id="sidebar" onPress={() => setDrawerOpen(true)}>
                 <Feather name="menu" color={'white'} size={50}/>
             </TouchableOpacity>
+            {isDrawerOpen && <DrawerContent onClose={() => setDrawerOpen(false)} />}
+            
             <View style={styles.mes}>
                 <TouchableOpacity><Feather name="chevron-left" size={30} color={'white'}/></TouchableOpacity>  
                 
