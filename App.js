@@ -1,28 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import MyTabs from './Navigation/TabNavigator';
-import Footer from './Src/Components/Footer';
-import Login from './Src/Screens/login';
 
-const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-  };
-
+function App() {
   return (
-    <>
-      {isLoggedIn ? (
-        <NavigationContainer>
-          <MyTabs />
-          <Footer />
-        </NavigationContainer>
-      ) : (
-        <Login onLoginSuccess={handleLoginSuccess} />
-      )}
-    </>
+    <NavigationContainer>
+        <MyTabs />
+    </NavigationContainer>
   );
-};
+}
 
 export default App;
