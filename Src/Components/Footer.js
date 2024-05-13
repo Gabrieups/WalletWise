@@ -7,7 +7,7 @@ import styles from '../../Css/Style';
 export default function Footer(){
 
     return(
-        <Pressable style={{alignSelf: 'center', position: 'absolute', bottom: '7%', backgroundColor: '#31654e', borderRadius: 50, zIndex: 1000}}>
+        <Pressable style={{ position: 'absolute', bottom: '7%', left: '30%', backgroundColor: '#31654e', borderRadius: 50, zIndex: 1000}}>
             <Feather name="plus" size={50} color='white'/>
         </Pressable>
     )
