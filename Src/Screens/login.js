@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import logoImage from 'C:/Users/lucas/Documents/1 Estudos/react/WalletWise/Src/Images/logoVerde.png';
 
 const Login = ({ onLoginSuccess }) => {
 
@@ -17,20 +18,22 @@ const Login = ({ onLoginSuccess }) => {
         {hasLogin ? (
           <>
             <Text style={styles.title}>Entrar</Text>
-            <TextInput style={styles.input} placeholder="Usuário" />
-            <TextInput style={styles.input} placeholder="Senha" secureTextEntry />
-            <Button title="Entrar" onPress={onLoginSuccess} />
-            <TouchableOpacity onPress={SingToLog}><Text style={{color: '#31654e', padding: 20, fontSize: 18}}>Não tenho cadastro</Text></TouchableOpacity>
+            <Image source={logoImage} style={{ width: 130, height: 100}}/>
+            <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#999"/>
+            <TextInput style={styles.input} placeholder="Senha" secureTextEntry placeholderTextColor="#999"/>
+            <TouchableOpacity style={styles.Button} onPress={onLoginSuccess}><Text style={{ color: '#fff' }}>Entrar</Text></TouchableOpacity>
+            <TouchableOpacity onPress={SingToLog}><Text style={{color: '#31654e', padding: 25, fontSize: 16, width: 300, textAlign: 'center',fontWeight: 'bold'}}>Não tenho cadastro</Text></TouchableOpacity>
           </>
         ) : (
           <>
             <Text style={styles.title}>Cadastrar</Text>
-            <TextInput textContentType='emailAddress' style={styles.input} placeholder="Email" />
-            <TextInput style={styles.input} placeholder="Senha" secureTextEntry />
-            <TextInput style={styles.input} placeholder="Primeiro Nome" value={lastName} onChangeText={text => setFirstName(text)} />
-            <TextInput style={styles.input} placeholder="Segundo Nome" value={lastName} onChangeText={text => setLastName(text)} />
-            <Button title="Cadastrar" onPress={SingToLog} />
-            <TouchableOpacity onPress={SingToLog}><Text style={{color: '#31654e', padding: 20, fontSize: 18}}>Já tenho cadastro</Text></TouchableOpacity>
+            <Image source={logoImage} style={{ width: 130, height: 100}}/>
+            <TextInput textContentType='emailAddress' style={styles.input} placeholder="Email" placeholderTextColor="#999"/>
+            <TextInput style={styles.input} placeholder="Senha" secureTextEntry placeholderTextColor="#999"/>
+            <TextInput style={styles.input} placeholder="Primeiro Nome" value={firstName} onChangeText={text => setFirstName(text)} placeholderTextColor="#999"/>
+            <TextInput style={styles.input} placeholder="Segundo Nome" value={lastName} onChangeText={text => setLastName(text)} placeholderTextColor="#999"/>
+            <TouchableOpacity style={styles.Button} onPress={SingToLog}><Text style={{ color: '#fff' }}>Cadastrar</Text></TouchableOpacity>
+            <TouchableOpacity onPress={SingToLog}><Text style={{color: '#31654e', padding: 25, fontSize: 16, width: 200, textAlign: 'center', fontWeight: 'bold'}}>Já tenho cadastro</Text></TouchableOpacity>
           </>
         )}
       </View>
@@ -46,23 +49,46 @@ const styles = StyleSheet.create({
     backgroundColor: '#31654e',
   },
   centeredBox: {
-    width: '70%',
+    width: 300,
+    height: 500, 
     backgroundColor: '#fff',
-    padding: 80,
-    borderRadius: 7,
+    paddingVertical: 30, 
+    paddingHorizontal: 70, 
+    borderRadius: 5,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.75,
+    shadowRadius: 3.84,
+    elevation: 5,
+
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 10,
+    fontWeight: 'bold',
   },
   input: {
-    width: '80%',
-    padding: 10,
-    marginVertical: 10,
+    width: '160%',
+    paddingVertical: 7, 
+    paddingHorizontal: 10,   
+    margin: 2,
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#999',
+    borderRadius: 5,
+  },
+  Button: {
+    width: '160%',
+    backgroundColor: '#31654e',
+    paddingVertical: 7, 
+    paddingHorizontal: 10,  
+    borderRadius: 5,
+    marginTop: 30,
+    alignItems: 'center',
   },
 });
 
