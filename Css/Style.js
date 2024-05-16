@@ -44,4 +44,48 @@ export default StyleSheet.create({
         width: '100%',
         height: '75%',
     },
+
+    btnAdd1: {
+        backgroundColor: 'white',
+        borderRadius: 25,
+        padding: 8,
+        position: 'relative',
+        top: '25%'
+    },
+
+    btnAdd2: {
+        backgroundColor: 'white',
+        borderRadius: 25,
+        padding: 8,
+        position: 'relative',
+        bottom: '60%'
+    },
+
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Escurece o fundo com opacidade
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 999, // Garantir que a sobreposição fique sobre todo o conteúdo
+    },
+
+    txtBtnAdd1: {
+        alignSelf: 'center',
+        color: 'white',
+        position: 'relative',
+        top: '30%'
+    },
+
+    txtBtnAdd2: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        color: 'white',
+        position: 'relative',
+        bottom: '50%',
+        width: '60%'
+    }
 });

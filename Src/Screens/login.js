@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import logoImage from 'C:/Users/lucas/Documents/1 Estudos/react/WalletWise/Src/Images/logoVerde.png';
+import logoImage from '../Images/logoVerde.png';
 
 const Login = ({ onLoginSuccess }) => {
 
