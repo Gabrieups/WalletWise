@@ -21,7 +21,7 @@ export default function MyTabs() {
       <Tab.Screen name="Principal" component={Principal} options={{ tabBarIcon: ({ color, size }) => ( <MaterialIcons name="cottage" color={color} size={size} />),}} />
       <Tab.Screen name="Planos" component={Planos} options={{ tabBarIcon: ({ color, size }) => ( <MaterialIcons name="event-available" color={color} size={size} />),}} />
       <Tab.Screen name="Transações" component={Transacoes} options={{ tabBarIcon: ({ color, size }) => ( <MaterialIcons name="currency-exchange" color={color} size={size} />),}} />
-      <Tab.Screen name="Mais" component={Mais} options={{ tabBarIcon: ({ color, size }) => ( <MaterialIcons name="more-horiz" color={color} size={size} />),}}/>
+      <Tab.Screen name="Categorias" component={Mais} options={{ tabBarIcon: ({ color, size }) => ( <MaterialIcons name="format-list-bulleted" color={color} size={size} />),}}/>
     </Tab.Navigator>
   );
 }

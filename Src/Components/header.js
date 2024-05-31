@@ -46,13 +46,11 @@ export default function Header(){
             {isDrawerOpen && <DrawerContent onClose={() => setDrawerOpen(false)} />}
             
             <View style={styles.mes}>
-                <TouchableOpacity><Feather name="chevron-left" size={30} color={'white'}/></TouchableOpacity>  
                 
                 <TouchableOpacity onPress={mostrarCalendario}>
                     <Text style={{padding: 30, color: 'white'}}>{dataCarregada}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity><Feather name="chevron-right" size={30} color={'white'}/></TouchableOpacity>   
             </View>
             <Image source={require("../Images/logo.png")} style={{width: 70, height: 50}} />
 

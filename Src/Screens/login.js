@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import logoImage from '../Images/logoVerde.png';
 
 const Login = ({ onLoginSuccess }) => {
@@ -7,6 +7,8 @@ const Login = ({ onLoginSuccess }) => {
   const [hasLogin, setHasLogin] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const SingToLog = () =>{
     hasLogin == false ? (setHasLogin(true)) : (setHasLogin(false))
@@ -18,22 +20,22 @@ const Login = ({ onLoginSuccess }) => {
         {hasLogin ? (
           <>
             <Text style={styles.title}>Entrar</Text>
-            <Image source={logoImage} style={{ width: 130, height: 100}}/>
-            <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#999"/>
-            <TextInput style={styles.input} placeholder="Senha" secureTextEntry placeholderTextColor="#999"/>
+            <Image source={logoImage} style={{ width: 130, height: 100 }} />
+            <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#999" onChangeText={setEmail} value={email} />
+            <TextInput style={styles.input} placeholder="Senha" secureTextEntry placeholderTextColor="#999" onChangeText={setPassword} value={password} />
             <TouchableOpacity style={styles.Button} onPress={onLoginSuccess}><Text style={{ color: '#fff' }}>Entrar</Text></TouchableOpacity>
-            <TouchableOpacity onPress={SingToLog}><Text style={{color: '#31654e', padding: 25, fontSize: 16, width: 300, textAlign: 'center',fontWeight: 'bold'}}>Não tenho cadastro</Text></TouchableOpacity>
+            <TouchableOpacity onPress={SingToLog}><Text style={{ color: '#31654e', padding: 25, fontSize: 16, width: 300, textAlign: 'center', fontWeight: 'bold' }}>Não tenho cadastro</Text></TouchableOpacity>
           </>
         ) : (
           <>
             <Text style={styles.title}>Cadastrar</Text>
-            <Image source={logoImage} style={{ width: 130, height: 100}}/>
-            <TextInput textContentType='emailAddress' style={styles.input} placeholder="Email" placeholderTextColor="#999"/>
-            <TextInput style={styles.input} placeholder="Senha" secureTextEntry placeholderTextColor="#999"/>
-            <TextInput style={styles.input} placeholder="Primeiro Nome" value={firstName} onChangeText={text => setFirstName(text)} placeholderTextColor="#999"/>
-            <TextInput style={styles.input} placeholder="Segundo Nome" value={lastName} onChangeText={text => setLastName(text)} placeholderTextColor="#999"/>
+            <Image source={logoImage} style={{ width: 130, height: 100 }} />
+            <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#999" onChangeText={setEmail} value={email} />
+            <TextInput style={styles.input} placeholder="Senha" secureTextEntry placeholderTextColor="#999" onChangeText={setPassword} value={password} />
+            <TextInput style={styles.input} placeholder="Primeiro Nome" onChangeText={setFirstName} value={firstName} placeholderTextColor="#999" />
+            <TextInput style={styles.input} placeholder="Segundo Nome" onChangeText={setLastName} value={lastName} placeholderTextColor="#999" />
             <TouchableOpacity style={styles.Button} onPress={SingToLog}><Text style={{ color: '#fff' }}>Cadastrar</Text></TouchableOpacity>
-            <TouchableOpacity onPress={SingToLog}><Text style={{color: '#31654e', padding: 25, fontSize: 16, width: 200, textAlign: 'center', fontWeight: 'bold'}}>Já tenho cadastro</Text></TouchableOpacity>
+            <TouchableOpacity onPress={SingToLog}><Text style={{ color: '#31654e', padding: 25, fontSize: 16, width: 200, textAlign: 'center', fontWeight: 'bold' }}>Já tenho cadastro</Text></TouchableOpacity>
           </>
         )}
       </View>
