@@ -86,7 +86,7 @@ export default function Footer(){
     const [nomeCartao, setNomeCartao] = useState('');
     const [nomeCategory, setNomeCategory] = useState('');
 
-    const [checked, setChecked] = useState('receb');
+    const [checked, setChecked] = useState('recebimento');
 
     const [valor, setValor] = useState(0);
 
@@ -170,7 +170,7 @@ export default function Footer(){
                 <View style={styles.overlay}>
                     <View style={{position: "absolute", bottom: '15%', flexDirection: "row", gap: 5, justifyContent: 'center', width: '100%'}}>
                         <TouchableOpacity style={{alignItems: 'center'}} onPress={mostrarTrans}>
-                            <MaterialIcons style={styles.btnAdd1} name="trending-down" color='green' size={30} /><Text style={styles.txtBtnAdd1}>Recebimento</Text>
+                            <MaterialIcons style={styles.btnAdd1} name="trending-down" color='green' size={30} /><Text style={styles.txtBtnAdd1}>Transação</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={{alignItems: 'center'}} onPress={mostrarNewPlan}>
@@ -210,15 +210,15 @@ export default function Footer(){
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Text>Recebimento:</Text>
                             <RadioButton
-                                value='receb'
-                                status={ checked === 'receb' ? 'checked' : 'unchecked' }
-                                onPress={() => setChecked('receb')}
+                                value='recebimento'
+                                status={ checked === 'recebimento' ? 'checked' : 'unchecked' }
+                                onPress={() => setChecked('recebimento')}
                             />
                             <Text>Pagamento:</Text>
                             <RadioButton
-                                value='envio'
-                                status={ checked === 'envio' ? 'checked' : 'unchecked' }
-                                onPress={() => setChecked('envio')}
+                                value='Pagamento'
+                                status={ checked === 'Pagamento' ? 'checked' : 'unchecked' }
+                                onPress={() => setChecked('Pagamento')}
                             />
                         </View>
 
