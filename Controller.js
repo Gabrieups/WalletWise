@@ -11,6 +11,23 @@ app.use(bodyParser.json());
 
 const SECRET_KEY = 'so-segredo';
 
+
+app.get('/user', async (req, res) => {
+  const userID = req.query.userConnected
+  try {
+    const users = await model.User.findAll({
+      where: {
+        id: userID
+      }
+    });
+    res.json(users);
+    console,log(users)
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
+    res.status(500).send(JSON.stringify(false));
+  }
+});
+
 //---------- endpoint cadastro ----------------
 app.post('/register', async (req, res) => {
   try {
@@ -40,7 +57,7 @@ app.post('/login', async (req, res) => {
 
     if (user && user.password === password) {
       const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
-      res.json({ success: true, token, userID: user.id });
+      res.json({ success: true, token, userID: user.id, name: user.firstName });
     } else {
       res.json({ success: false });
     }
@@ -81,6 +98,41 @@ app.get('/transaction', async (req, res) => {
     res.json(transactions);
   } catch (error) {
     console.error('Erro ao buscar transações:', error);
+    res.status(500).send(JSON.stringify(false));
+  }
+});
+
+//-----------------Metas------------------------
+app.post('/plan', async (req, res) => {
+  try {
+    let reqs = await model.Plan.create({
+      'name': req.body.Meta,
+      'valor': req.body.valor,
+      'categoryId': req.body.idCat,
+      'userId': req.body.userConnected,
+      'createdAt': new Date(),
+      'updatedAt': new Date()
+    });
+    if (reqs) {
+      res.send(JSON.stringify(true));
+    }
+  } catch (error) {
+    console.error('Erro ao salvar a Meta:', error);
+    res.status(500).send(JSON.stringify(false));
+  }
+});
+
+app.get('/plan', async (req, res) => {
+  const userID = req.query.userConnected
+  try {
+    const plans = await model.Plan.findAll({
+      where: {
+        userId: userID
+      }
+    });
+    res.json(plans);
+  } catch (error) {
+    console.error('Erro ao buscar planos:', error);
     res.status(500).send(JSON.stringify(false));
   }
 });
@@ -143,8 +195,13 @@ app.post('/category', async (req, res) => {
 });
 
 app.get('/categories', async (req, res) => {
+  const userID = req.query.userConnected
   try {
-    const categories = await model.Categoria.findAll();
+    const categories = await model.Categoria.findAll({
+      where: {
+        userId: userID
+      }
+    });
     res.json(categories);
   } catch (error) {
     console.error('Erro ao buscar categorias:', error);

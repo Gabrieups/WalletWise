@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
-import { Pressable, View, Text, Button, TouchableOpacity, TouchableHighlight, Modal, TextInput } from "react-native";
+import { Pressable, View, Text, Button, TouchableOpacity, TouchableHighlight, Modal, TextInput, FlatList } from "react-native";
 import styles from '../../Css/Style';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { RadioButton } from 'react-native-paper';
@@ -23,6 +23,8 @@ export default function Footer(){
     const [NewPlanVisivel, setNewPlanVisivel] = useState(false);
     const [openMenuCateg, setOpenMenuCateg] = useState(false);
     const [choseCateg, setChoseCateg] = useState(false);
+    const [valorPlan, setValorPlan] = useState('');
+    const [nomePlan, setNomePlan] = useState('');
 
     //-----------------Modal Cartão-------------------------
     const [NewCardVisivel, setNewCardVisivel] = useState(false);
@@ -36,11 +38,14 @@ export default function Footer(){
     const [bandeira, setBandeira] = useState(null);
 
     //-----------------Modal Categoria-------------------------
-    const [CategoryVisivel, setCategoryVisivel] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [categoriaVisible, setCategoriaVisible] = useState(false);
     const [valueCategoria, setValueCategoria] = useState(null);
     const [corValueCategoria, setCorValueCategoria] = useState(null);
     const [openCategoria, setOpenCategoria] = useState(false);
     const [openCorCategoria, setOpenCorCategoria] = useState(false);
+    const [itemsChoseCateg, setItemsChoseCateg] = useState([]);
+    const [categoriaId, setCategoriaId] = useState('');
 
     const MostrarBtnAdd = () => {
         if(btnAddVisivel == false){
@@ -71,7 +76,7 @@ export default function Footer(){
     }
 
     const mostrarCategory = () =>{
-        setCategoryVisivel(!CategoryVisivel);
+        setCategoriaVisible(!categoriaVisible);
         setBtnAddVisivel(false);
         setRotation(0)
     }
@@ -108,11 +113,6 @@ export default function Footer(){
         { label: 'Mastercard', value: 'mastercard', icon: () => <PaymentIcon type='mastercard'/>, onPress: () => adicionarCartao('mastercard') },
     ];
 
-    const escolherCategoria = (tipo) => {
-        setChoseCateg(tipo);
-        setOpenMenuCateg(false);
-    };
-
     const adicionarCategoria = (tipo) => {
         setValueCategoria(tipo);
         setOpenCategoria(false);
@@ -128,10 +128,35 @@ export default function Footer(){
         { label: '', value: 'shopping-cart', icon: () => <MaterialIcons name='shopping-cart' size={30}/>, onPress: () => adicionarCategoria('shopping-cart') },
     ];
     
-    const itemsChoseCateg = [
-        { label: 'Casinha', value: 'casa', icon: () => <MaterialIcons name='cottage' size={30}/>, onPress: () => escolherCategoria('cottage') },
-        { label: 'Mercado', value: 'mercado', icon: () => <MaterialIcons name='shopping-cart' size={30}/>, onPress: () => escolherCategoria('shopping-cart') },
-    ];
+
+    const getCategoria = async () => {
+        try {
+          const idUser = await AsyncStorage.getItem('userID');
+          const response = await fetch(endereco + '/categories?userConnected=' +idUser);
+          const json = await response.json();
+          setCategories(json);
+          console.log(json);
+
+        const mappedItems = json.map((item) => ({
+            label: item.name,
+            value: item.id,
+            icon: () => <MaterialIcons name={item.iconeCategoria} size={30} color={item.colorCategoria} />,
+        }));
+        setItemsChoseCateg(mappedItems);
+        console.log(mappedItems)
+
+        } catch (error) {
+          console.error('Erro ao buscar categorias:', error);
+        }
+    };
+
+    useEffect(() => {
+        getCategoria();
+    }, []);
+
+    const handleValueChange = (value) => {
+      setCategoriaId(value);
+    };
 
     const coresCategoria = [
         { label: '', value: '#FFFF00', icon: () => <MaterialIcons name='radio-button-checked' size={30} color={'#ffff00'}/>, onPress: () => corCategoria('radio-button-checked') },
@@ -228,20 +253,39 @@ export default function Footer(){
             >   
                 <View style={{backgroundColor: 'rgba(0, 0, 0, 0.2)', flex: 1}}>
                     <View style={{backgroundColor: '#ffffff', borderRadius: 25, width: '80%', height: 200, padding: 15, position: 'absolute', left: '10%', top: '40%', alignItems: 'center'}}>
-                        <TextInput placeholder="Nome da Meta" />
+                        <TextInput 
+                            placeholder="Nome da Meta"
+                            value={nomePlan}
+                            onChangeText={setNomePlan}
+                        />
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <Text>Valor: </Text>
+                            <TextInput
+                                placeholder="0,00"
+                                placeholderTextColor="#999"
+                                value={formatarValorMonetario(valorPlan)}
+                                onChangeText={(text) => { 
+                                    const novoValor = text.replace(/[^0-9,]/g, '');
+                                    setValorPlan(parseFloat(novoValor.replace(',', '.')));
+                                }}
+                                keyboardType="numeric"
+                            />
+                        </View>
                         <DropDownPicker
                             open={openMenuCateg}
                             value={choseCateg}
                             items={itemsChoseCateg}
                             setOpen={setOpenMenuCateg}
                             setValue={setChoseCateg}
+                            onChangeValue={handleValueChange}
                             placeholder="Seleione a Categoria"
                             listMode="MODAL"
                         />
                         <View style={{flexDirection: 'row'}}>
                             <Button title="cancelar" onPress={mostrarNewPlan}/>                    
-                            <Button title="salvar" onPress={mostrarNewPlan}/>    
-                        </View>               
+                            <Button title="salvar" onPress={cadPlan}/>    
+                        </View>          
+                        <Text>{errorMessage}</Text>     
                     </View>
                 </View>
             </Modal>
@@ -312,7 +356,7 @@ export default function Footer(){
             <Modal
                 animationType="none"
                 transparent={true}
-                visible={CategoryVisivel}
+                visible={categoriaVisible}
                 onRequestClose={mostrarCategory}
             >   
                 <View style={{backgroundColor: 'rgba(0, 0, 0, 0.2)', flex: 1}}>
@@ -403,6 +447,56 @@ export default function Footer(){
         setTransVisivel(!TransVisivel);
         setBtnAddVisivel(false);
         setRotation(0);
+        setNomeTrans(''); setValor(''); setErrorMessage('');
+    }
+
+    async function cadPlan() {
+        if (!nomePlan || !valorPlan || !categoriaId) {
+          setErrorMessage('Todos os campos são obrigatórios.');
+          setTimeout(() => {
+            setErrorMessage('');
+          }, 3000);
+          return;
+        }
+    
+        try {
+          console.log('Iniciando cadastro com:', {
+            Meta: nomePlan,
+            valor: valorPlan,
+            idCat: categoriaId
+          });
+
+          const userConnected = await AsyncStorage.getItem('userID');
+          
+          const reqs = await fetch(endereco + '/plan', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                Meta: nomePlan,
+                valor: valorPlan,
+                idCat: categoriaId,
+                userConnected: parseInt(userConnected)
+            })
+          });
+    
+          const ress = await reqs.json();
+          if (ress) {
+            setErrorMessage('Meta Salva');
+          } else {
+            setErrorMessage(ress.message || 'Erro ao salvar a Meta');
+          }
+        } catch (error) {
+          setErrorMessage('Cliente Indisponível');
+          console.log('erro:', error)
+        }
+    
+        setNewPlanVisivel(!NewPlanVisivel);
+        setBtnAddVisivel(false);
+        setRotation(0);
+        setNomePlan(''); setValorPlan(''); setErrorMessage('');
     }
 
     async function cadCartao() {
@@ -509,7 +603,7 @@ export default function Footer(){
             setErrorMessage('');
           }, 3000);
         }
-        setCategoryVisivel(!CategoryVisivel);
+        setCategoriaVisible(!categoriaVisible);
         setBtnAddVisivel(false);
         setRotation(0);
     }

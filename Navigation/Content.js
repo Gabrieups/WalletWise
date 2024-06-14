@@ -1,17 +1,30 @@
-import React, { useRef, useEffect } from 'react';
-import { Button, Modal, Animated, Dimensions, TouchableOpacity, View } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { Button, Modal, Animated, Dimensions, TouchableOpacity, View, Text } from 'react-native';
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DrawerContent = ({ onClose }) => {
   const navigation = useNavigation();
+  const [idUser, setIdUser] = useState(null);
 
-  const handleProfilePicChange = () => {
-    console.log('Mudar foto do perfil');
-  };
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const name = await AsyncStorage.getItem('name');
+        if (name !== null) {
+          setIdUser(name);
+        }
+      } catch (error) {
+        console.log('não encontrei');
+      }
+    };
+
+    fetchUserName();
+  }, []);
 
   const handleLogout = () => {
-    navigation.navigate('Login'); 
+    navigation.navigate('Login');
   };
 
   const slideAnim = useRef(new Animated.Value(-Dimensions.get('window').width)).current;
@@ -19,13 +32,13 @@ const DrawerContent = ({ onClose }) => {
   useEffect(() => {
     Animated.timing(slideAnim, {
       toValue: 0,
-      duration: 500, 
+      duration: 500,
       useNativeDriver: true
     }).start();
   }, [slideAnim]);
 
   return (
-    <Modal 
+    <Modal
       transparent={true}
       animationType="none"
       visible={true}
@@ -38,13 +51,15 @@ const DrawerContent = ({ onClose }) => {
             height: '100%', 
             backgroundColor: '#31654e', 
             paddingTop: 30, 
-            transform: [{ translateX: slideAnim }]
+            transform: [{ translateX: slideAnim }],
           }}>
             <TouchableOpacity onPress={onClose}>
               <Feather name='x-circle' color='white' size={30} style={{alignSelf: 'flex-end', paddingRight: 10}} />
             </TouchableOpacity>
-            <Button title="Mudar Foto do Perfil" onPress={handleProfilePicChange} />
-            <Button title="Sair da Conta" onPress={handleLogout} />
+            <Text style={{ color: 'white', fontSize: 20, marginBottom: 600, marginLeft: 10 }}>
+              {`Olá, ${idUser || 'Usuário'}`}
+            </Text>
+            <TouchableOpacity onPress={handleLogout}><Text style={{color: '#ffffff', fontSize: 15, marginLeft: 10}}>Sair da conta</Text></TouchableOpacity>
           </Animated.View>
         </View>
       </TouchableOpacity>

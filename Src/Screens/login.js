@@ -110,7 +110,9 @@ const Login = ({ navigation }) => {
 
       if (data.success) {
         await AsyncStorage.setItem('userID', String(data.userID));
+        await AsyncStorage.setItem('name', String(data.name));
         console.log(data.userID);
+        console.log(data.name);
         navigation.replace('Main');
       } else {
         setErrorMessage('Credenciais inválidas. Por favor, tente novamente.');
