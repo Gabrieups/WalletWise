@@ -6,10 +6,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { RadioButton } from 'react-native-paper';
 import { PaymentIcon } from 'react-native-payment-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Footer(){
 
-    const endereco = 'http://192.168.1.109:8081';
+    const endereco = 'http://192.168.1.113:8081';
 
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -25,12 +26,14 @@ export default function Footer(){
 
     //-----------------Modal Cartão-------------------------
     const [NewCardVisivel, setNewCardVisivel] = useState(false);
+    const [numCartao, setNumCartao] = useState('');
     const [openCartao, setOpenCartao] = useState(false);
     const [valueCartao, setValueCartao] = useState(null);
     const [openFech, setOpenFech] = useState(false);
     const [valueFech, setValueFech] = useState(null);
     const [openVenc, setOpenVenc] = useState(false);
     const [valueVenc, setValueVenc] = useState(null);
+    const [bandeira, setBandeira] = useState(null);
 
     //-----------------Modal Categoria-------------------------
     const [CategoryVisivel, setCategoryVisivel] = useState(false);
@@ -121,8 +124,8 @@ export default function Footer(){
     };
 
     const itemsCategoria = [
-        { label: '', value: 'casa', icon: () => <MaterialIcons name='cottage' size={30}/>, onPress: () => adicionarCategoria('cottage') },
-        { label: '', value: 'mercado', icon: () => <MaterialIcons name='shopping-cart' size={30}/>, onPress: () => adicionarCategoria('shopping-cart') },
+        { label: '', value: 'cottage', icon: () => <MaterialIcons name='cottage' size={30}/>, onPress: () => adicionarCategoria('cottage') },
+        { label: '', value: 'shopping-cart', icon: () => <MaterialIcons name='shopping-cart' size={30}/>, onPress: () => adicionarCategoria('shopping-cart') },
     ];
     
     const itemsChoseCateg = [
@@ -263,13 +266,18 @@ export default function Footer(){
                                 placeholder="Numero do cartão"
                                 placeholderTextColor="#999"
                                 keyboardType="numeric"
+                                value={numCartao}
+                                onChangeText={setNumCartao}
                             />
                             <DropDownPicker
                                 open={openCartao}
                                 value={valueCartao}
                                 items={itemsCartao}
                                 setOpen={setOpenCartao}
-                                setValue={setValueCartao}
+                                setValue={(value) => {
+                                    setValueCartao(value);
+                                    setBandeira(value);
+                                }}
                                 placeholder="Seleione a bandeira"
                                 listMode="MODAL"
                             />
@@ -294,8 +302,9 @@ export default function Footer(){
                         />
                         <View style={{flexDirection: 'row'}}>
                             <Button title="Cancelar" onPress={mostrarNewCard}/>                    
-                            <Button title="Salvar" onPress={mostrarNewCard}/>   
-                        </View>                 
+                            <Button title="Salvar" onPress={cadCartao}/>   
+                        </View>
+                        <Text>{errorMessage}</Text>                 
                     </View>
                 </View>          
             </Modal>
@@ -339,13 +348,15 @@ export default function Footer(){
                         </View>
                         <View style={{flexDirection: 'row'}}>
                             <Button title="Cancelar" onPress={mostrarCategory}/>                    
-                            <Button title="Salvar" onPress={mostrarCategory}/>   
-                        </View>                   
+                            <Button title="Salvar" onPress={cadCategoria}/>   
+                        </View>
+                        <Text>{errorMessage}</Text>                      
                     </View>
                 </View>            
             </Modal>
         </>
     )
+
     async function cadTransacao() {
         if (!nomeTrans || !checked || !valor) {
           setErrorMessage('Todos os campos são obrigatórios.');
@@ -361,7 +372,9 @@ export default function Footer(){
             check: checked,
             valor: valor
           });
-    
+
+          const userConnected = await AsyncStorage.getItem('userID');
+          
           const reqs = await fetch(endereco + '/transaction', {
             method: 'POST',
             headers: {
@@ -372,21 +385,131 @@ export default function Footer(){
                 Transacao: nomeTrans,
                 check: checked,
                 valor: valor,
+                userConnected: parseInt(userConnected)
             })
           });
     
           const ress = await reqs.json();
           if (ress) {
-            setHasLogin(true);
             setErrorMessage('Transação salva');
           } else {
-            setErrorMessage(ress.message || 'Erro ao salvar a transação');
+            setErrorMessage(ress.message || 'bacana');
           }
         } catch (error) {
-          setErrorMessage('Erro ao salvar a transação');
+          setErrorMessage('bundao');
+          console.log('erro:', error)
         }
     
         setTransVisivel(!TransVisivel);
+        setBtnAddVisivel(false);
+        setRotation(0);
+    }
+
+    async function cadCartao() {
+        if (!numCartao|| !valueCartao || !valueFech || !valueVenc) {
+          setErrorMessage('Preencha todos os campos não opcionais.');
+          setTimeout(() => {
+            setErrorMessage('');
+          }, 3000);
+          return;
+        }
+        if (numCartao < 12) {
+          setErrorMessage('O número do cartão deve ter 12 caracteres.');
+          setTimeout(() => {
+            setErrorMessage('');
+          }, 3000);
+          return;
+        }
+    
+        try {
+          console.log('Iniciando cadastro com:', {
+            nomeCartao: nomeCartao,
+            numCartao: numCartao,
+            bandeira: bandeira,
+            diaFechamento: valueFech,
+            diaVencimento: valueVenc
+          });
+
+          const userConnected = await AsyncStorage.getItem('userID');
+    
+          const reqs = await fetch(endereco + '/newcard', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                nomeCartao: nomeCartao,
+                numCartao: numCartao,
+                bandeira: bandeira,
+                diaFechamento: valueFech,
+                diaVencimento: valueVenc,
+                userConnected: parseInt(userConnected)
+            })
+          });
+    
+          const ress = await reqs.json();
+          if (ress) {
+            setErrorMessage('Cartão salvo');
+          } else {
+            setErrorMessage(ress.message || 'Erro ao salvar o cartão');
+          }
+        } catch (error) {
+          setErrorMessage('', error);
+          setTimeout(() => {
+            setErrorMessage('');
+          }, 3000);
+        }
+        setNewCardVisivel(!NewCardVisivel);
+        setBtnAddVisivel(false);
+        setRotation(0);
+    }
+
+    async function cadCategoria() {
+        if (!nomeCategory|| !valueCategoria || !corValueCategoria) {
+          setErrorMessage('Todos os campos são obrigatórios.');
+          setTimeout(() => {
+            setErrorMessage('');
+          }, 3000);
+          return;
+        }
+    
+        try {
+          console.log('Iniciando cadastro com:', {
+            nomeCategoria: nomeCategory,
+            iconeCategoria: valueCategoria,
+            colorCategoria: corValueCategoria
+          });
+
+          const userConnected = await AsyncStorage.getItem('userID');
+    
+          const reqs = await fetch(endereco + '/category', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                nomeCategoria: nomeCategory,
+                iconeCategoria: valueCategoria,
+                corCategoria: corValueCategoria,
+                userConnected: parseInt(userConnected)
+            })
+          });
+    
+          const ress = await reqs.json();
+          if (ress) {
+            setErrorMessage('Categoria salva');
+          } else {
+            setErrorMessage(ress.message || 'Erro ao salvar a categoria');
+          }
+        } catch (error) {
+          setErrorMessage('', error);
+          setTimeout(() => {
+            setErrorMessage('');
+          }, 3000);
+        }
+        setCategoryVisivel(!CategoryVisivel);
         setBtnAddVisivel(false);
         setRotation(0);
     }

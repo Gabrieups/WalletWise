@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import logoImage from '../Images/logoVerde.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 const Login = ({ navigation }) => {
   const [hasLogin, setHasLogin] = useState(false);
@@ -13,7 +12,9 @@ const Login = ({ navigation }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const endereco = 'http://192.168.1.109:8081';
+  const endereco = 'http://192.168.1.113:8081';
+
+  let data;
 
   useEffect(() => {
     setFirstName('');
@@ -104,11 +105,12 @@ const Login = ({ navigation }) => {
         })
       });
 
-      const data = await response.json();
+      data = await response.json();
       console.log('Login resposta:', data);
 
       if (data.success) {
-        await AsyncStorage.setItem('token', data.token);
+        await AsyncStorage.setItem('userID', String(data.userID));
+        console.log(data.userID);
         navigation.replace('Main');
       } else {
         setErrorMessage('Credenciais inválidas. Por favor, tente novamente.');
@@ -120,26 +122,6 @@ const Login = ({ navigation }) => {
 
     setIsLoading(false);
   }
-
-  // const getLoggedUser = async () => {
-  //   try {
-  //     const token = await AsyncStorage.getItem('token');
-  //     if (!token) throw new Error('Token não encontrado');
-
-  //     const response = await axios.get(endereco + '/me', {
-  //       headers: { Authorization: `Bearer ${token}` } 
-  //     });
-
-  //     if (response.data.success) {
-  //       return response.data.user;
-  //     } else {
-  //       throw new Error('Erro ao obter usuário');
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     return null;
-  //   }
-  // };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
